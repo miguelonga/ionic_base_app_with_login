@@ -13,8 +13,48 @@
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-card class="text-center" *ngFor="let match of matches">
+    <ion-item>
+      <ion-avatar slot="start">
+        <img src="https://st4.depositphotos.com/3849181/22611/v/450/depositphotos_226115096-stock-illustration-tennis-padel-racket-blue-logo.jpg">
+      </ion-avatar>
+      <ion-label>
+        <h1>{{match.date | date:'shortTime'}}</h1>
+        <p>{{match.date | date:'EEEE, MMMM d'}}</p>
+      </ion-label>
+    </ion-item>
+    <ion-card-header>
+      <ion-card-title>+ Paddle Valencia</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="more-details">
+      <ion-row *ngIf="match.indoor else outdoor" text-center>
+        <ion-icon name="tennisball-sharp"></ion-icon>
+        <p>pista cubierta</p>
+      </ion-row>
+      <ng-template #outdoor>
+        <ion-row>
+          <ion-icon name="tennisball-outline"></ion-icon>
+          <p>pista exterior</p>
+        </ion-row>
+      </ng-template>
+    </ion-card-content>
+    <ion-footer>
+      <ion-row class="details">
+        <ion-col text-center>
+            <ion-icon name="people-outline"></ion-icon>
+            <div>{{match.players.length}}/4</div>
+        </ion-col>
+        <ion-col text-center>
+            <ion-icon name="medal-outline"></ion-icon>
+            <div>{{match.level}}</div>
+        </ion-col>
+        <ion-col text-center>
+            <ion-button>
+              <ion-icon name="cash-outline"></ion-icon>
+              <div>{{match.price}}€</div>
+            </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-footer>
+  </ion-card>
 </ion-content>

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { MatchesService } from '../services/matches.service';
+import { Match } from '../models/match.model';
 
 @Component({
   selector: 'app-home',
@@ -6,7 +8,9 @@ import { Component } from '@angular/core';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-
-  constructor() {}
-
+  matches: Array<Match> = []
+  
+  constructor(private matchesService: MatchesService) {
+    this.matches = this.matchesService.getMatches()
+  }
 }
