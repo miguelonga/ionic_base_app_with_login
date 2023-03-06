@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Match } from 'src/app/models/match.model';
+import { ActivatedRoute } from '@angular/router';
+import { MatchesService } from 'src/app/services/matches.service';
 
 @Component({
   selector: 'app-match-detail',
@@ -7,19 +8,21 @@ import { Match } from 'src/app/models/match.model';
   styleUrls: ['./match-detail.page.scss'],
 })
 export class MatchDetailPage implements OnInit {
-  match: Match = {
-    id: 2,
-    level: 2.1,
-    clubId: 8,
-    players: [{id:1},{id:2},{id:3}],
-    date: Date.now() + 10000000000,
-    indoor: true,
-    price: 11.2
-  }
+  match: any
 
-  constructor() { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private matchService: MatchesService) {}
 
   ngOnInit() {
+    this.activatedRoute.params.subscribe((params) => {
+      let matchId = +params['id']
+      
+      this.matchService.getById(matchId).subscribe((match) => {
+        this.match = match
+      })
+    })
+    
   }
 
 }

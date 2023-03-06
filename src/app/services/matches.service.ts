@@ -69,4 +69,9 @@ export class MatchesService {
     return of(this.fakeData)
   }
 
+  getById(id: number){
+    let match = this.fakeData.find(match => match['id'] === id)
+    return of(match)
+  }
+
 }
