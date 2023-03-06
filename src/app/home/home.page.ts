@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatchesService } from '../services/matches.service';
 import { Match } from '../models/match.model';
-import { ModalController, NavController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { UserSettingsComponent } from '../components/user-settings/user-settings.component';
 import { Router } from '@angular/router';
 
@@ -38,6 +38,6 @@ export class HomePage {
   }
 
   openMatch(matchId:number){
-    this.router.navigateByUrl(`/match-detail/${matchId}`)
+    this.router.navigate(['match-detail', matchId])
   }
 }
