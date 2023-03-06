@@ -19,6 +19,14 @@ const routes: Routes = [
     path: 'loader',
     loadChildren: () => import('./pages/loader/loader.module').then( m => m.LoaderPageModule)
   },
+  {
+    path: 'match-detail',
+    loadChildren: () => import('./pages/match-detail/match-detail.module').then( m => m.MatchDetailPageModule)
+  },
+  {
+    path: 'match-detail/:id',
+    loadChildren: () => import('./pages/match-detail/match-detail.module').then( m => m.MatchDetailPageModule)
+  },
 ];
 
 @NgModule({

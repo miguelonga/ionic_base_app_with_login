@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>match-detail</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <img src="https://ueeshop.ly200-cdn.com/u_file/UPAU/UPAU880/2205/photo/a5faf1ef6d.jpg" />
+    <ion-card-header>
+      <ion-card-title>Card Title</ion-card-title>
+      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content>
+      <ion-item>
+        <ion-col>
+          <ion-icon name="calendar-outline"></ion-icon>
+          Día
+          <p style="text-align: center;">{{match.date | date:'d MMMM'}}</p>
+        </ion-col>
+        <ion-col>
+          <ion-icon name="time-outline"></ion-icon>
+          Hora
+          <p style="text-align: center;">{{match.date | date:'shortTime'}}</p>
+        </ion-col>
+        <ion-col>
+          <ion-icon name="medal-outline"></ion-icon>
+          Nivel
+          <p style="text-align: center;">{{match.level}}</p>
+        </ion-col>
+      </ion-item>
+      <ion-grid class="court">
+        <ion-row>
+          <ion-col size="6">
+            <ion-avatar>
+            <img src="https://lh3.googleusercontent.com/a/AGNmyxalpJCawUml7EOVFtQIczdb2rWZTkLyYissOHgw=s288">
+            </ion-avatar>
+          </ion-col>
+          <ion-col size="6">
+            <ion-avatar>
+            <img src="https://lh3.googleusercontent.com/a/AGNmyxalpJCawUml7EOVFtQIczdb2rWZTkLyYissOHgw=s288">
+            </ion-avatar>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="6">
+            <ion-avatar>
+            <img src="https://lh3.googleusercontent.com/a/AGNmyxalpJCawUml7EOVFtQIczdb2rWZTkLyYissOHgw=s288">
+            </ion-avatar>
+          </ion-col>
+          <ion-col size="6">
+            <ion-avatar>
+            <img src="https://lh3.googleusercontent.com/a/AGNmyxalpJCawUml7EOVFtQIczdb2rWZTkLyYissOHgw=s288">
+            </ion-avatar>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

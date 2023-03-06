@@ -1,12 +1,13 @@
 export interface Match {
-    level: number,
+    id: number,
+    level: number | null,
     clubId: number,
     players: Array<User>,
     date: number,
-    indoor: boolean,
+    indoor: boolean | null,
     price: number
 }
 
 export interface User {
-    userId: number
+    id: number
 }
