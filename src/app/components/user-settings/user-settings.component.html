@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="medium" (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>Welcome</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="confirm()">Confirm</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label position="stacked">Your name</ion-label>
+    <ion-input placeholder="Your name"></ion-input>
+    <ion-range  [min]="0" [max]="10" [value]="5" [pin]="true" [ticks]="true" [snaps]="true"></ion-range>
+  </ion-item>
+</ion-content>
