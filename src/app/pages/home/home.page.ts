@@ -13,10 +13,12 @@ import { Router } from '@angular/router';
 export class HomePage {
   matches: Array<Match> = []
   options = {
-    userLevel: 0,
-    onlyIndoor: false,
-    minPrice: 0,
-    maxPrice: 0
+    level: 0,
+    indoor: false,
+    price: {
+      upper: 0,
+      lower: 0
+    }
   }
 
   constructor(
@@ -25,19 +27,24 @@ export class HomePage {
     private router: Router) {}
 
   ngOnInit(){
-    this.matchesService.getMatches().subscribe((matches) => {
-      this.matches = matches
+    this.matchesService.filterOptions().subscribe(options => {
+      this.options = options
+      this.filter()
     })
   }
 
   async openOptions(){
     const modal = await this.modalCtrl.create({
-      component: UserSettingsComponent
+      component: UserSettingsComponent,
+      componentProps: {
+        options: this.options
+      }
     })
     modal.present() 
     const {data, role} = await modal.onWillDismiss()
     if(role === 'confirm'){
-      console.log(data)
+      this.options = data
+      this.filter()
     }
   }
 
@@ -46,14 +53,17 @@ export class HomePage {
   }
 
   filter(){
-    if(this.options.userLevel > 0) this.filterByUserLevel()
-    if(this.options.onlyIndoor) this.filterOnlyIndoor()
-    if(this.options.maxPrice > 0) this.filterByPriceRange()
+    this.matchesService.getMatches().subscribe((matches) => {
+      this.matches = matches
+      if(this.options.level > 0) this.filterByUserLevel()
+      if(this.options.indoor) this.filterOnlyIndoor()
+      if(this.options.price.upper > 0) this.filterByPriceRange()
+    })
   }
 
   private filterByUserLevel(){
     this.matches = this.matches.filter(match => {
-      let diference = Math.abs(match.level - this.options.userLevel)
+      let diference = Math.abs(match.level - this.options.level)
       return diference <= 1
     })
   }
@@ -66,7 +76,7 @@ export class HomePage {
 
   private filterByPriceRange() {
     this.matches = this.matches.filter(match => {
-      return match.price <= this.options.maxPrice
+      return match.price <= this.options.price.upper
     })
   }
 }

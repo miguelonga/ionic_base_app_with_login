@@ -7,6 +7,14 @@ import { fakeData } from './fake.data';
 })
 export class MatchesService {
   fakeData = fakeData
+  options = {
+    level: 0,
+    indoor: false,
+    price: {
+      lower: 0,
+      upper: 0
+    }
+  }
   constructor() {}
 
   getMatches(){
@@ -18,4 +26,7 @@ export class MatchesService {
     return of(match)
   }
 
+  filterOptions(){
+    return of(this.options)
+  }
 }

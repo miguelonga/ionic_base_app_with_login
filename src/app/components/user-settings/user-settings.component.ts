@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { MatchesService } from 'src/app/services/matches.service';
 
 @Component({
   selector: 'app-user-settings',
@@ -7,16 +8,31 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./user-settings.component.scss'],
 })
 export class UserSettingsComponent implements OnInit {
-  level: number = 3
-  constructor(private modalCtrl: ModalController) { }
+  options = {
+    level: 0,
+    indoor: false,
+    price: {
+      lower: 0,
+      upper: 0
+    }
+  }
 
-  ngOnInit() {}
+  constructor(
+    private modalCtrl: ModalController,
+    private matchesService: MatchesService) { }
+
+  ngOnInit() {
+    console.log(this.options)
+    this.matchesService.filterOptions().subscribe((options) => {
+      this.options = options
+    })
+  }
 
   cancel() {
     return this.modalCtrl.dismiss(null, 'cancel');
   }
 
   confirm() {
-    return this.modalCtrl.dismiss(this.level, 'confirm');
+    return this.modalCtrl.dismiss(this.options, 'confirm');
   }
 }

@@ -10,9 +10,18 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
-  <ion-item>
-    <ion-label position="stacked">Your name</ion-label>
-    <ion-input placeholder="Your name"></ion-input>
-    <ion-range  [min]="0" [max]="10" [value]="5" [pin]="true" [ticks]="true" [snaps]="true"></ion-range>
-  </ion-item>
+  <ion-list>
+    <ion-item>
+      <ion-label>Solo indoor</ion-label>
+      <ion-toggle [(ngModel)]="options.indoor" slot="end"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label>Nivel de juego</ion-label>
+      <ion-range [(ngModel)]="options.level" [max]="10" [pin]="true" [ticks]="true" [snaps]="true"></ion-range>
+    </ion-item>
+    <ion-item>
+      <ion-label>Precio partida</ion-label>
+      <ion-range [(ngModel)]="options.price" [dualKnobs]="true" [max]="20" [value]="{ lower: 0, upper: 13 }" [pin]="true" [ticks]="true" [snaps]="true"></ion-range>
+    </ion-item>
+  </ion-list>  
 </ion-content>

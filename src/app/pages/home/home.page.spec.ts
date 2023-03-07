@@ -58,7 +58,7 @@ describe('HomePage', () => {
     spyOn(matchesService, 'getMatches').and.returnValue(of(matches))
     component.ngOnInit()
     
-    component.options.onlyIndoor = true
+    component.options.indoor = true
     component.filter()
 
     expect(component.matches.length).toEqual(2)
@@ -66,7 +66,6 @@ describe('HomePage', () => {
 
   it('should filter by user level', () => {
     let userLevel = 3
-    component.options.userLevel = userLevel
     let matches = [1, 2, 3].map!(index => {
       let match = new Match
       match.level = (userLevel + 0.5)
@@ -79,6 +78,7 @@ describe('HomePage', () => {
     component.ngOnInit()
     expect(component.matches.length).toEqual(4)
 
+    component.options.level = userLevel
     component.filter()
 
     expect(component.matches.length).toEqual(3)
@@ -90,10 +90,10 @@ describe('HomePage', () => {
       match.price = index
       return match
     })
-    let minPrice = 0
-    let maxPrice = 1
-    component.options.minPrice = minPrice
-    component.options.maxPrice = maxPrice
+    let lowerPrice = 0
+    let upperPrice = 1
+    component.options.price.lower = lowerPrice
+    component.options.price.upper = upperPrice
     spyOn(matchesService, 'getMatches').and.returnValue(of(matches))
 
     component.ngOnInit()
