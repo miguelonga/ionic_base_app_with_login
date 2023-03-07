@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { MatchesService } from '../services/matches.service';
-import { Match } from '../models/match.model';
+import { MatchesService } from '../../services/matches.service';
+import { Match } from '../../models/match.model';
 import { ModalController } from '@ionic/angular';
-import { UserSettingsComponent } from '../components/user-settings/user-settings.component';
+import { UserSettingsComponent } from '../../components/user-settings/user-settings.component';
 import { Router } from '@angular/router';
 
 @Component({

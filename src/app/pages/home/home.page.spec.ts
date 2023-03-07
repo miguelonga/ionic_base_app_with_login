@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 import { HomePage } from './home.page';
 import { Router } from '@angular/router';
-import { MatchesService } from '../services/matches.service';
-import { Match } from '../models/match.model';
+import { MatchesService } from '../../services/matches.service';
+import { Match } from '../../models/match.model';
 import { of } from 'rxjs';
 
 describe('HomePage', () => {
