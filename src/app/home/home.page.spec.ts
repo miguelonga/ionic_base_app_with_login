@@ -1,13 +1,16 @@
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-
 import { HomePage } from './home.page';
 import { Router } from '@angular/router';
+import { MatchesService } from '../services/matches.service';
+import { Match } from '../models/match.model';
+import { of } from 'rxjs';
 
 describe('HomePage', () => {
   let component: HomePage;
   let fixture: ComponentFixture<HomePage>;
   let router: Router;
+  let matchesService: MatchesService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -17,6 +20,8 @@ describe('HomePage', () => {
 
     fixture = TestBed.createComponent(HomePage);
     router = TestBed.get(Router);
+    matchesService = TestBed.get(MatchesService)
+    
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -32,5 +37,68 @@ describe('HomePage', () => {
     component.openMatch(matchId)
 
     expect(router.navigate).toHaveBeenCalledWith(['match-detail', matchId])
+  })
+
+  it('should call match service getMatches method on init', () => {
+    spyOn(matchesService, 'getMatches').and.callThrough()
+
+    component.ngOnInit()
+
+    expect(matchesService.getMatches).toHaveBeenCalled()
+  })
+
+  it('should filter by indoor', () => {
+    let matches = [1, 2, 3].map(index => {
+      let match = new Match
+      match.id = index
+      match.indoor = true
+      return match
+    })
+    matches[0].indoor = false
+    spyOn(matchesService, 'getMatches').and.returnValue(of(matches))
+    component.ngOnInit()
+    
+    component.options.onlyIndoor = true
+    component.filter()
+
+    expect(component.matches.length).toEqual(2)
+  })
+
+  it('should filter by user level', () => {
+    let userLevel = 3
+    component.options.userLevel = userLevel
+    let matches = [1, 2, 3].map!(index => {
+      let match = new Match
+      match.level = (userLevel + 0.5)
+      return match
+    })
+    let outOfLevelMatch = new Match
+    outOfLevelMatch.level = (userLevel - 1.1)
+    matches.push(outOfLevelMatch)
+    spyOn(matchesService, 'getMatches').and.returnValue(of(matches))
+    component.ngOnInit()
+    expect(component.matches.length).toEqual(4)
+
+    component.filter()
+
+    expect(component.matches.length).toEqual(3)
+  })
+
+  it('should filter price range', () => {
+    let matches = [1, 2, 3].map(index => {
+      let match = new Match 
+      match.price = index
+      return match
+    })
+    let minPrice = 0
+    let maxPrice = 1
+    component.options.minPrice = minPrice
+    component.options.maxPrice = maxPrice
+    spyOn(matchesService, 'getMatches').and.returnValue(of(matches))
+
+    component.ngOnInit()
+    component.filter()
+
+    expect(component.matches.length).toEqual(1)
   })
 });
