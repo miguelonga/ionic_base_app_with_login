@@ -47,6 +47,24 @@ describe('HomePage', () => {
     expect(matchesService.getMatches).toHaveBeenCalled()
   })
 
+  it('should filter by matchesService filter options', () => {
+    let options = {
+      level: 0,
+      indoor: true,
+      price: {
+        lower: 0,
+        upper: 0
+      }
+    }
+    spyOn(matchesService, 'filterOptions').and.returnValue(of(options))
+    spyOn(component, 'filterOnlyIndoor').and.callThrough()
+
+    component.ngOnInit()
+
+    expect(component.options.indoor).toEqual(options.indoor)
+    expect(component.filterOnlyIndoor).toHaveBeenCalled()
+  })
+
   it('should filter by indoor', () => {
     let matches = [1, 2, 3].map(index => {
       let match = new Match
@@ -76,6 +94,7 @@ describe('HomePage', () => {
     matches.push(outOfLevelMatch)
     spyOn(matchesService, 'getMatches').and.returnValue(of(matches))
     component.ngOnInit()
+  
     expect(component.matches.length).toEqual(4)
 
     component.options.level = userLevel

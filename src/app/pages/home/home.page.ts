@@ -30,7 +30,7 @@ export class HomePage {
     this.matchesService.filterOptions().subscribe(options => {
       this.options = options
       this.filter()
-    })
+    }).unsubscribe()
   }
 
   async openOptions(){
@@ -58,7 +58,7 @@ export class HomePage {
       if(this.options.level > 0) this.filterByUserLevel()
       if(this.options.indoor) this.filterOnlyIndoor()
       if(this.options.price.upper > 0) this.filterByPriceRange()
-    })
+    }).unsubscribe()
   }
 
   private filterByUserLevel(){
@@ -68,7 +68,7 @@ export class HomePage {
     })
   }
 
-  private filterOnlyIndoor(){
+  filterOnlyIndoor(){
     this.matches = this.matches.filter(match => {
       return match.indoor === true
     })
