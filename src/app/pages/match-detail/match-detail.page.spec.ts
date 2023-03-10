@@ -1,7 +1,8 @@
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { of } from 'rxjs';
+import { Match } from 'src/app/models/match.model';
 
 import { MatchDetailPage } from './match-detail.page';
 
@@ -37,7 +38,19 @@ describe('MatchDetailPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should get match from match id in activated route params', () => {
-    expect(mockedMatchId).toEqual(component.match.id)
+  it('should set match from match id in activated route params', () => {
+    spyOn(component, '_setMatch').and.callThrough()
+    component.ngOnInit()
+    expect(component._setMatch).toHaveBeenCalledWith(mockedMatchId)
+  })
+
+  it('should await getById() matchesService response', async() => {
+    let match = new Match
+    let promisedMatch = new Promise(resolve => resolve(match))
+    spyOn(component.matchesService, 'getById').and.returnValue(promisedMatch)
+    
+    await component.ngOnInit()
+    
+    expect(component.match.id).toEqual(match.id)
   })
 });

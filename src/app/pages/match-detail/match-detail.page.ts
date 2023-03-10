@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Match } from 'src/app/models/match.model';
 import { MatchesService } from 'src/app/services/matches.service';
 
 @Component({
@@ -8,21 +9,20 @@ import { MatchesService } from 'src/app/services/matches.service';
   styleUrls: ['./match-detail.page.scss'],
 })
 export class MatchDetailPage implements OnInit {
-  match: any
+  match: Match = new Match
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private matchService: MatchesService) {}
+    public matchesService: MatchesService) {}
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params) => {
       let matchId = +params['id']
-      
-      this.matchService.getById(matchId).subscribe((match) => {
-        this.match = match
-      })
+      this._setMatch(matchId)
     })
-    
-  }
+  } 
 
+  async _setMatch(id: number) {
+    this.match = <Match>await this.matchesService.getById(id)
+  }
 }
