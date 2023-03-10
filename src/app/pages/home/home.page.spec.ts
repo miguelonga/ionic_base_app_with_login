@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import { IonCard, IonicModule } from '@ionic/angular';
 import { HomePage } from './home.page';
 import { Router } from '@angular/router';
 import { MatchesService } from '../../services/matches.service';
-import { Match } from '../../models/match.model';
+import { By } from '@angular/platform-browser';
+import { Match } from 'src/app/models/match.model';
 import { of } from 'rxjs';
 
 describe('HomePage', () => {
@@ -30,6 +31,42 @@ describe('HomePage', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should populate match list with matchesService.load()', () => {
+    let match = new Match
+    spyOn(matchesService, 'getMatches').and.returnValue(of([match, match]))
+    component.ngOnInit()
+
+    expect(component.matches.length).toEqual(2)
+  })
+
+  it('displays each match on ion-card', () => {
+    let match = new Match
+    spyOn(matchesService, 'getMatches').and.returnValue(of([match, match]))
+    component.ngOnInit()
+
+    fixture.detectChanges()
+    let matches = fixture.debugElement.queryAll(By.directive(IonCard));
+
+    expect(matches.length).toEqual(2)
+  })
+
+  it('displays special icons when indoor true of false', () => {
+    let outdoorMatch = new Match
+    let indoorMatch = new Match
+    indoorMatch.indoor = true
+    spyOn(matchesService, 'getMatches').and.returnValue(of([outdoorMatch, indoorMatch]))
+    component.ngOnInit()
+    fixture.detectChanges()
+    
+    let outdoorIconName = 'sunny-outline'
+    let outdoorMatches = fixture.debugElement.queryAll(By.css(`ion-card ion-item ion-icon[name=${outdoorIconName}]`));
+    expect(outdoorMatches.length).toEqual(1)
+
+    let indoorIconName = 'home-outline'
+    let indoorMatches = fixture.debugElement.queryAll(By.css(`ion-card ion-item ion-icon[name=${indoorIconName}]`));
+    expect(indoorMatches.length).toEqual(1)
+  })
+  
   it('should go to match detail', () => {
     let matchId: number = 1
     spyOn(router, 'navigate')
@@ -39,85 +76,4 @@ describe('HomePage', () => {
     expect(router.navigate).toHaveBeenCalledWith(['match-detail', matchId])
   })
 
-  it('should call match service getMatches method on init', () => {
-    spyOn(matchesService, 'getMatches').and.callThrough()
-
-    component.ngOnInit()
-
-    expect(matchesService.getMatches).toHaveBeenCalled()
-  })
-
-  it('should filter by matchesService filter options', () => {
-    let options = {
-      level: 0,
-      indoor: true,
-      price: {
-        lower: 0,
-        upper: 0
-      }
-    }
-    spyOn(matchesService, 'filterOptions').and.returnValue(of(options))
-    spyOn(component, 'filterOnlyIndoor').and.callThrough()
-
-    component.ngOnInit()
-
-    expect(component.options.indoor).toEqual(options.indoor)
-    expect(component.filterOnlyIndoor).toHaveBeenCalled()
-  })
-
-  it('should filter by indoor', () => {
-    let matches = [1, 2, 3].map(index => {
-      let match = new Match
-      match.id = index
-      match.indoor = true
-      return match
-    })
-    matches[0].indoor = false
-    spyOn(matchesService, 'getMatches').and.returnValue(of(matches))
-    component.ngOnInit()
-    
-    component.options.indoor = true
-    component.filter()
-
-    expect(component.matches.length).toEqual(2)
-  })
-
-  it('should filter by user level', () => {
-    let userLevel = 3
-    let matches = [1, 2, 3].map!(index => {
-      let match = new Match
-      match.level = (userLevel + 0.5)
-      return match
-    })
-    let outOfLevelMatch = new Match
-    outOfLevelMatch.level = (userLevel - 1.1)
-    matches.push(outOfLevelMatch)
-    spyOn(matchesService, 'getMatches').and.returnValue(of(matches))
-    component.ngOnInit()
-  
-    expect(component.matches.length).toEqual(4)
-
-    component.options.level = userLevel
-    component.filter()
-
-    expect(component.matches.length).toEqual(3)
-  })
-
-  it('should filter price range', () => {
-    let matches = [1, 2, 3].map(index => {
-      let match = new Match 
-      match.price = index
-      return match
-    })
-    let lowerPrice = 0
-    let upperPrice = 1
-    component.options.price.lower = lowerPrice
-    component.options.price.upper = upperPrice
-    spyOn(matchesService, 'getMatches').and.returnValue(of(matches))
-
-    component.ngOnInit()
-    component.filter()
-
-    expect(component.matches.length).toEqual(1)
-  })
 });

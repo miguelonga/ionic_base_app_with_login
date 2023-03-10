@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  matches: Array<Match> = []
+  matches: Match[] = []
   options = {
     level: 0,
     indoor: false,
@@ -27,10 +27,11 @@ export class HomePage {
     private router: Router) {}
 
   ngOnInit(){
-    this.matchesService.filterOptions().subscribe(options => {
-      this.options = options
-      this.filter()
-    }).unsubscribe()
+    this.getMatches()
+  }
+
+  getMatches() {
+    this.matchesService.getMatches().subscribe(matches => { this.matches = matches})
   }
 
   async openOptions(){
@@ -43,40 +44,17 @@ export class HomePage {
     modal.present() 
     const {data, role} = await modal.onWillDismiss()
     if(role === 'confirm'){
-      this.options = data
+      this.options = data || this.options
       this.filter()
     }
   }
 
+  filter(){
+    this.matchesService.filter(this.options)
+    this.matchesService.getMatches().subscribe(matches => this.matches = matches)
+  }
+
   openMatch(matchId:number){
     this.router.navigate(['match-detail', matchId])
-  }
-
-  filter(){
-    this.matchesService.getMatches().subscribe((matches) => {
-      this.matches = matches
-      if(this.options.level > 0) this.filterByUserLevel()
-      if(this.options.indoor) this.filterOnlyIndoor()
-      if(this.options.price.upper > 0) this.filterByPriceRange()
-    }).unsubscribe()
-  }
-
-  private filterByUserLevel(){
-    this.matches = this.matches.filter(match => {
-      let diference = Math.abs(match.level - this.options.level)
-      return diference <= 1
-    })
-  }
-
-  filterOnlyIndoor(){
-    this.matches = this.matches.filter(match => {
-      return match.indoor === true
-    })
-  }
-
-  private filterByPriceRange() {
-    this.matches = this.matches.filter(match => {
-      return match.price <= this.options.price.upper
-    })
   }
 }

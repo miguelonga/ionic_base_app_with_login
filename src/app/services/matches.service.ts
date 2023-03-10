@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { fakeData } from './fake.data';
+import { Match } from '../models/match.model';
+import { DataService } from './data-service.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MatchesService {
-  fakeData = fakeData
+  matches: Array<Match> = []
   options = {
     level: 0,
     indoor: false,
@@ -15,17 +16,47 @@ export class MatchesService {
       upper: 0
     }
   }
-  constructor() {}
+  constructor(private dataService: DataService) {
+    this.getMatches().subscribe(matches => {this.matches = matches})
+  }
 
   getMatches(){
-    return of(this.fakeData)
+    return this.dataService.load()
   }
 
   getById(id: number){
-    let match = this.fakeData.find(match => match['id'] === id)
-    return of(match)
+    let match = this.matches.find(match => match['id'] === id)
+    return new Promise(resolve => resolve(match))
   }
 
+  filter(options: any){
+    this.options = options
+    this.getMatches().subscribe(matches => {
+      this.matches = matches
+      if(this.options.indoor) this.filterOnlyIndoor()
+      if(this.options.level > 0) this.filterByUserLevel()
+      if(this.options.price.upper > 0) this.filterByPriceRange()
+    })
+
+  }
+
+  filterOnlyIndoor(){
+    this.matches = this.matches.filter(match => match.indoor)
+  }
+
+  filterByUserLevel(){
+    this.matches = this.matches.filter(match => {
+      let diference = Math.abs(match.level - this.options.level)
+      return diference <= 1
+    })
+  }
+
+  filterByPriceRange() {
+    this.matches = this.matches.filter(match => {
+      return match.price <= this.options.price.upper
+    })
+  }
+  
   filterOptions(){
     return of(this.options)
   }
