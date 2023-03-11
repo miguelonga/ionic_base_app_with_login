@@ -66,6 +66,20 @@ describe('HomePage', () => {
     let indoorMatches = fixture.debugElement.queryAll(By.css(`ion-card ion-item ion-icon[name=${indoorIconName}]`));
     expect(indoorMatches.length).toEqual(1)
   })
+
+  it('should filter by options', () => {
+    let indoorMatch = new Match
+    indoorMatch.indoor = true
+    let outdoorMatch = new Match
+    spyOn(matchesService, 'getMatches').and.returnValue(of([indoorMatch, outdoorMatch]))
+    component.ngOnInit()
+    component.options.indoor = true
+
+    component.filter()
+    console.log(component.matches)
+
+    expect(component.matches.length).toEqual(1)
+  })
   
   it('should go to match detail', () => {
     let matchId: number = 1

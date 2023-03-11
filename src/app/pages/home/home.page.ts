@@ -51,7 +51,7 @@ export class HomePage {
 
   filter(){
     this.matchesService.filter(this.options)
-    this.matchesService.getMatches().subscribe(matches => this.matches = matches)
+    this.matches = this.matchesService.matches
   }
 
   openMatch(matchId:number){
