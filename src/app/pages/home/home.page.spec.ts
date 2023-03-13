@@ -96,6 +96,27 @@ describe('HomePage', () => {
     expect(listNames.length).toEqual(1)   
   })
 
+  it('should show only matches from today until 14 days later', () => {
+    let today = Date.now()
+    let match = new Match
+    match.date = today
+    let fiveteenDaysLaterMatch = new Match
+    let fiveteenDaysLater = new Date().setDate(new Date().getDate() + 15)
+    fiveteenDaysLaterMatch.date = fiveteenDaysLater
+    let matches = [match, fiveteenDaysLaterMatch]
+  
+    spyOn(matchesService, 'getMatches').and.returnValue(of(matches))
+    component.ngOnInit()
+
+    fixture.detectChanges()
+    let dividers = fixture.debugElement.queryAll(By.css('ion-item-group ion-item-divider ion-label'));
+    let listNames = dividers.map(divider => {
+      return divider.nativeElement.innerText
+    })
+    expect(listNames.length).toEqual(1)   
+    expect(component.matchesPerDays.length).toEqual(1)
+  })
+
   it('displays special icons when indoor true of false', () => {
     let outdoorMatch = new Match
     let indoorMatch = new Match

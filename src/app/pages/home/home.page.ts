@@ -40,7 +40,7 @@ export class HomePage {
   componseGroups(matches: Match[]){
     let result: MatchesInDay[] = []
     let daysToShow = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
-    daysToShow.map(days => {
+    daysToShow.forEach(days => {
       let today = new Date()
       let day = new Date().setDate(today.getDate() + days)
       today.setDate(today.getDate() + days)
