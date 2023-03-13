@@ -19,41 +19,48 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-card (click)="openMatch(match.id)" class="text-center" *ngFor="let match of matches">
-    <ion-item>
-      <ion-avatar slot="start">
-        <img src="https://i1.wp.com/lh6.ggpht.com/-_hWpceX4v7g/UvFTNaXv9lI/AAAAAAAAG9k/TW3qn9Q9CrY/s0/x5Z0VNmd.jpeg">
-      </ion-avatar>
-      <ion-avatar *ngIf="match.players.length >= 2" style="margin-left:-2.3em" slot="start">
-        <img src="https://lh3.googleusercontent.com/a/AGNmyxalpJCawUml7EOVFtQIczdb2rWZTkLyYissOHgw=s288">
-      </ion-avatar>
-      <ion-avatar *ngIf="match.players.length === 3" style="margin-left:-2.3em" slot="start">
-        <img src="https://png.pngtree.com/png-vector/20210817/ourlarge/pngtree-tennis-game-sport-concept-illustration-man-in-tennis-sportswear-throws-png-image_3806667.jpg">
-      </ion-avatar>
-      <ion-label>
-        <h1>{{match.date | date:'shortTime'}}</h1>
-        <p>+ Padel Club</p>
-      </ion-label>
-      <ion-icon *ngIf="match.indoor" slot="end" name="home-outline"></ion-icon>
-      <ion-icon *ngIf="!match.indoor" slot="end" name="sunny-outline"></ion-icon>
-    </ion-item>
-    <ion-footer>
-      <ion-row class="details">
-        <ion-col text-center>
-          <ion-icon name="location-outline"></ion-icon>
-          <div>8 km</div>
-        </ion-col>
-        <ion-col text-center>
-          <ion-icon name="medal-outline"></ion-icon>
-          <div>{{match.level}}</div>
-        </ion-col>
-        <ion-col text-center>
-          <ion-icon name="cash-outline"></ion-icon>
-          <div>{{match.price}}€</div>
-        </ion-col>
-      </ion-row>
-    </ion-footer>
-  </ion-card>
+  <ion-item-group *ngFor="let matchesPerDay of matchesPerDays">
+    <ion-item-divider [sticky]="true">
+      <ion-label>{{matchesPerDay.date | date:'EEEE, MMMM d'}}</ion-label>
+    </ion-item-divider>
+    <ion-card (click)="openMatch(match.id)" class="text-center" *ngFor="let match of matchesPerDay.matches">
+      <ion-item>
+        <ion-avatar slot="start">
+          <img src="https://i1.wp.com/lh6.ggpht.com/-_hWpceX4v7g/UvFTNaXv9lI/AAAAAAAAG9k/TW3qn9Q9CrY/s0/x5Z0VNmd.jpeg">
+        </ion-avatar>
+        <ion-avatar *ngIf="match.players.length >= 2" style="margin-left:-2.3em" slot="start">
+          <img src="https://lh3.googleusercontent.com/a/AGNmyxalpJCawUml7EOVFtQIczdb2rWZTkLyYissOHgw=s288">
+        </ion-avatar>
+        <ion-avatar *ngIf="match.players.length === 3" style="margin-left:-2.3em" slot="start">
+          <img src="https://png.pngtree.com/png-vector/20210817/ourlarge/pngtree-tennis-game-sport-concept-illustration-man-in-tennis-sportswear-throws-png-image_3806667.jpg">
+        </ion-avatar>
+        <ion-label>
+          <h1>{{match.date | date:'shortTime'}}</h1>
+          <p>+ Padel Club</p>
+        </ion-label>
+        <ion-icon *ngIf="match.indoor" slot="end" name="home-outline"></ion-icon>
+        <ion-icon *ngIf="!match.indoor" slot="end" name="sunny-outline"></ion-icon>
+      </ion-item>
+      <ion-footer>
+        <ion-row class="details">
+          <ion-col text-center>
+            <ion-icon name="location-outline"></ion-icon>
+            <div>8 km</div>
+          </ion-col>
+          <ion-col text-center>
+            <ion-icon name="medal-outline"></ion-icon>
+            <div>{{match.level}}</div>
+          </ion-col>
+          <ion-col text-center>
+            <ion-icon name="cash-outline"></ion-icon>
+            <div>{{match.price}}€</div>
+          </ion-col>
+        </ion-row>
+      </ion-footer>
+    </ion-card>
+  </ion-item-group>
+
+  
 </ion-content>
 <ion-fab vertical="bottom" horizontal="center" slot="fixed">
   <ion-fab-button>

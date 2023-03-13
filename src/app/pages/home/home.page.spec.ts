@@ -4,8 +4,9 @@ import { HomePage } from './home.page';
 import { Router } from '@angular/router';
 import { MatchesService } from '../../services/matches.service';
 import { By } from '@angular/platform-browser';
-import { Match } from 'src/app/models/match.model';
+import { Match, MatchesInDay } from 'src/app/models/match.model';
 import { of } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 describe('HomePage', () => {
   let component: HomePage;
@@ -31,16 +32,17 @@ describe('HomePage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should populate match list with matchesService.load()', () => {
+  it('should populate match per days list with matchesService.getMatches()', () => {
     let match = new Match
     spyOn(matchesService, 'getMatches').and.returnValue(of([match, match]))
     component.ngOnInit()
 
-    expect(component.matches.length).toEqual(2)
+    expect(component.matchesPerDays[0].matches.length).toEqual(2)
   })
 
   it('displays each match on ion-card', () => {
     let match = new Match
+    match.date = new Date().setDate(new Date().getDate() + 1)
     spyOn(matchesService, 'getMatches').and.returnValue(of([match, match]))
     component.ngOnInit()
 
@@ -48,6 +50,50 @@ describe('HomePage', () => {
     let matches = fixture.debugElement.queryAll(By.directive(IonCard));
 
     expect(matches.length).toEqual(2)
+  })
+
+  it('should compose a matchesPerDays array with an object with date and a list of matches of this date', () => {
+    let match = new Match
+    let matches = [match]
+    spyOn(matchesService, 'getMatches').and.returnValue(of(matches))
+    component.ngOnInit()
+
+    expect(component.matchesPerDays.length).toEqual(1)
+    expect(Object.keys(component.matchesPerDays[0])).toEqual(['date','matches'])
+  })
+
+  it('displays all matches for one day in the same list with day as list divider', () => {
+    let today = Date.now()
+    let todayDateString = new DatePipe('en').transform(today,'EEEE, MMMM d')
+    let match = new Match
+  
+    spyOn(matchesService, 'getMatches').and.returnValue(of([match]))
+    component.ngOnInit()
+
+    fixture.detectChanges()
+    let dividers = fixture.debugElement.queryAll(By.css('ion-item-group ion-item-divider ion-label'));
+    let listNames = dividers.map(divider => {
+      return divider.nativeElement.innerText
+    })
+    expect(listNames.length).toEqual(1)
+    expect(listNames[0]).toEqual(todayDateString)
+  })
+
+  it('dont show divider if dont have matches in day', () => {
+    let today = Date.now()
+    let match = new Match
+    match.date = today
+    let matches = [match]
+  
+    spyOn(matchesService, 'getMatches').and.returnValue(of(matches))
+    component.ngOnInit()
+
+    fixture.detectChanges()
+    let dividers = fixture.debugElement.queryAll(By.css('ion-item-group ion-item-divider ion-label'));
+    let listNames = dividers.map(divider => {
+      return divider.nativeElement.innerText
+    })
+    expect(listNames.length).toEqual(1)   
   })
 
   it('displays special icons when indoor true of false', () => {
@@ -78,7 +124,7 @@ describe('HomePage', () => {
     component.filter()
     console.log(component.matches)
 
-    expect(component.matches.length).toEqual(1)
+    expect(component.matchesPerDays[0].matches.length).toEqual(1)
   })
   
   it('should go to match detail', () => {
@@ -89,5 +135,4 @@ describe('HomePage', () => {
 
     expect(router.navigate).toHaveBeenCalledWith(['match-detail', matchId])
   })
-
 });

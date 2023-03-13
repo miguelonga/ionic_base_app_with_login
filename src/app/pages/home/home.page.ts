@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatchesService } from '../../services/matches.service';
-import { Match } from '../../models/match.model';
+import { Match, MatchesInDay } from '../../models/match.model';
 import { ModalController } from '@ionic/angular';
 import { UserSettingsComponent } from '../../components/user-settings/user-settings.component';
 import { Router } from '@angular/router';
@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 })
 export class HomePage {
   matches: Match[] = []
+  matchesPerDays: MatchesInDay[] = []
   options = {
     level: 0,
     indoor: false,
@@ -31,7 +32,25 @@ export class HomePage {
   }
 
   getMatches() {
-    this.matchesService.getMatches().subscribe(matches => { this.matches = matches})
+    this.matchesService.getMatches().subscribe(matches => { 
+      this.componseGroups(matches)
+    })
+  }
+
+  componseGroups(matches: Match[]){
+    let result: MatchesInDay[] = []
+    let daysToShow = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+    daysToShow.map(days => {
+      let today = new Date()
+      let day = new Date().setDate(today.getDate() + days)
+      today.setDate(today.getDate() + days)
+      let matchesInDay = matches.filter(match => {
+        let matchDay = new Date(match.date).getDate()
+        return match ? matchDay === today.getDate() : null
+      })
+      if(matchesInDay.length > 0) result.push({date: new Date(day), matches: matchesInDay})
+    })
+    this.matchesPerDays = result
   }
 
   async openOptions(){
@@ -51,7 +70,7 @@ export class HomePage {
 
   filter(){
     this.matchesService.filter(this.options)
-    this.matches = this.matchesService.matches
+    this.componseGroups(this.matchesService.matches)
   }
 
   openMatch(matchId:number){
