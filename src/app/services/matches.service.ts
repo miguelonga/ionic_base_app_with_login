@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { Match } from '../models/match.model';
 import { DataService } from './data-service.service';
+import { fakeUsers } from './fake.data';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,10 @@ export class MatchesService {
   getById(id: number){
     let match = this.matches.find(match => match['id'] === id)
     return new Promise(resolve => resolve(match))
+  }
+
+  getPlayer(id: number){
+    return fakeUsers.filter(user => user.id === id)[0]
   }
 
   filter(options: any){

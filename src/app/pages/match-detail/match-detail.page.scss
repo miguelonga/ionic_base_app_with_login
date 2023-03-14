@@ -3,3 +3,13 @@
     vertical-align: auto;
     border: 1px solid;
 }
+
+.match-details ion-item{
+    min-height: 0px;
+    height: 2em;
+}
+
+.match-details ion-item ion-label{
+    min-height: 0px;
+}
+

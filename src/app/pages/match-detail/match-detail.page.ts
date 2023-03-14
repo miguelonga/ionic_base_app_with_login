@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Match } from 'src/app/models/match.model';
+import { Match, Player } from 'src/app/models/match.model';
 import { MatchesService } from 'src/app/services/matches.service';
 
 @Component({
@@ -10,6 +10,8 @@ import { MatchesService } from 'src/app/services/matches.service';
 })
 export class MatchDetailPage implements OnInit {
   match: Match = new Match
+  players: Player[] = []
+  finishDate: number = 0
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -24,5 +26,14 @@ export class MatchDetailPage implements OnInit {
 
   async _setMatch(id: number) {
     this.match = <Match>await this.matchesService.getById(id)
+    this.players = this.match.players.map(player => {
+      return this.matchesService.getPlayer(player.id)
+    })
+    let finishDate = new Date(this.match.date).setHours(new Date(this.match.date).getHours() + 2)
+    this.finishDate = finishDate
+  }
+
+  calculateRate(total: number, winned: number) {
+    return Math.round((winned * 100) / total)
   }
 }
