@@ -11,6 +11,6 @@ export class DataService {
   constructor() {}
 
   load(){
-    return of(fakeData)
+    return of(this.data)
   }
 }

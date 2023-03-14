@@ -28,7 +28,7 @@ export class MatchesService {
   }
 
   getById(id: number){
-    let match = this.matches.find(match => match['id'] === id)
+    let match = this.matches.find(match => match['id'] === id) || new Match()
     return new Promise(resolve => resolve(match))
   }
 
