@@ -25,14 +25,8 @@
     </ion-item-divider>
     <ion-card (click)="openMatch(match.id)" class="text-center" *ngFor="let match of matchesPerDay.matches">
       <ion-item>
-        <ion-avatar slot="start">
-          <img src="https://i1.wp.com/lh6.ggpht.com/-_hWpceX4v7g/UvFTNaXv9lI/AAAAAAAAG9k/TW3qn9Q9CrY/s0/x5Z0VNmd.jpeg">
-        </ion-avatar>
-        <ion-avatar *ngIf="match.players.length >= 2" style="margin-left:-2.3em" slot="start">
-          <img src="https://lh3.googleusercontent.com/a/AGNmyxalpJCawUml7EOVFtQIczdb2rWZTkLyYissOHgw=s288">
-        </ion-avatar>
-        <ion-avatar *ngIf="match.players.length === 3" style="margin-left:-2.3em" slot="start">
-          <img src="https://png.pngtree.com/png-vector/20210817/ourlarge/pngtree-tennis-game-sport-concept-illustration-man-in-tennis-sportswear-throws-png-image_3806667.jpg">
+        <ion-avatar class="overlayed" *ngFor="let player of match.players" slot="start">
+          <img src="{{player.image}}">
         </ion-avatar>
         <ion-label>
           <h1>{{match.date | date:'shortTime'}}</h1>

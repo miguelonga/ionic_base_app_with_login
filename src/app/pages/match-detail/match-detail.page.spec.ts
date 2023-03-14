@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { of } from 'rxjs';
 import { Match } from 'src/app/models/match.model';
+import { fakeUsers } from 'src/app/services/fake.data';
 import { MatchDetailPage } from './match-detail.page';
 
 describe('MatchDetailPage', () => {
@@ -57,7 +58,7 @@ describe('MatchDetailPage', () => {
 
   it('compose players array with each player info', async() => {
     let match = new Match
-    match.players = [{id:1},{id:2},{id:3}]
+    match.players = [fakeUsers[0],fakeUsers[1],fakeUsers[2]]
     let promisedMatch = new Promise(resolve => resolve(match))
     spyOn(component.matchesService, 'getById').and.returnValue(promisedMatch)
     await component.ngOnInit()
@@ -70,7 +71,7 @@ describe('MatchDetailPage', () => {
 
   it('should display each player in an acordition item showing image, name and level', async() => {
     let match = new Match
-    match.players = [{id:2}]
+    match.players = [fakeUsers[1]]
     let promisedMatch = new Promise(resolve => resolve(match))
     spyOn(component.matchesService, 'getById').and.returnValue(promisedMatch)
     component.ngOnInit()
@@ -88,7 +89,7 @@ describe('MatchDetailPage', () => {
 
   it('should show extra information when click on accordion', async() => {
     let match = new Match
-    match.players = [{id:2}]
+    match.players = [fakeUsers[0]]
     let promisedMatch = new Promise(resolve => resolve(match))
     spyOn(component.matchesService, 'getById').and.returnValue(promisedMatch)
     await component.ngOnInit()

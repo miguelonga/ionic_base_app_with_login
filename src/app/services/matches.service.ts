@@ -8,7 +8,7 @@ import { fakeUsers } from './fake.data';
   providedIn: 'root'
 })
 export class MatchesService {
-  matches: Array<Match> = []
+  matches: Match[] = []
   options = {
     level: 0,
     indoor: false,
@@ -18,7 +18,9 @@ export class MatchesService {
     }
   }
   constructor(private dataService: DataService) {
-    this.getMatches().subscribe(matches => {this.matches = matches})
+    this.getMatches().subscribe(matches => {
+      this.matches = matches
+    })
   }
 
   getMatches(){

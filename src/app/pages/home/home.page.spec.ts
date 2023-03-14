@@ -7,6 +7,7 @@ import { By } from '@angular/platform-browser';
 import { Match, MatchesInDay } from 'src/app/models/match.model';
 import { of } from 'rxjs';
 import { DatePipe } from '@angular/common';
+import { fakeUsers } from 'src/app/services/fake.data';
 
 describe('HomePage', () => {
   let component: HomePage;
@@ -117,15 +118,17 @@ describe('HomePage', () => {
     expect(component.matchesPerDays.length).toEqual(1)
   })
 
-  it('displays special icons when indoor true of false', () => {
+  it('displays special icons when indoor true of false', async() => {
     let outdoorMatch = new Match
     let indoorMatch = new Match
     indoorMatch.indoor = true
     spyOn(matchesService, 'getMatches').and.returnValue(of([outdoorMatch, indoorMatch]))
     component.ngOnInit()
+    await fixture.whenStable()
     fixture.detectChanges()
     
     let outdoorIconName = 'sunny-outline'
+    console.log(fixture.debugElement.queryAll(By.css('ion-card ion-item')))
     let outdoorMatches = fixture.debugElement.queryAll(By.css(`ion-card ion-item ion-icon[name=${outdoorIconName}]`));
     expect(outdoorMatches.length).toEqual(1)
 
@@ -143,9 +146,27 @@ describe('HomePage', () => {
     component.options.indoor = true
 
     component.filter()
-    console.log(component.matches)
 
     expect(component.matchesPerDays[0].matches.length).toEqual(1)
+  })
+
+  it('should show each player avatar on match card', async() => {
+    let matchWithTwoPlayers = new Match
+    matchWithTwoPlayers.players = [fakeUsers[0], fakeUsers[1]]
+    spyOn(matchesService, 'getMatches').and.returnValue(of([matchWithTwoPlayers]))
+    component.ngOnInit()
+    await fixture.whenStable()
+
+    fixture.detectChanges()
+    let renderedImages = fixture.debugElement.queryAll(By.css('ion-card ion-item ion-avatar'))
+    let firstImgSrc = renderedImages[0].query(By.css('img')).nativeElement.src
+    let firstPlayerImage = matchWithTwoPlayers.players[0].image
+    let secondImgSrc = renderedImages[1].query(By.css('img')).nativeElement.src
+    let secondPlayerImage = matchWithTwoPlayers.players[1].image
+
+    expect(2).toEqual(renderedImages.length)
+    expect(firstPlayerImage).toEqual(firstImgSrc)
+    expect(secondPlayerImage).toEqual(secondImgSrc)
   })
   
   it('should go to match detail', () => {

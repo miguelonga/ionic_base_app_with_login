@@ -3,7 +3,7 @@ export class Match {
     level: number = 0; 
     clubId: number = 0;
     court: number = 0;
-    players: User[] | Player[] = [];
+    players: Player[] = [];
     date: number = Date.now();
     indoor: boolean = false;
     price: number = 0
@@ -13,7 +13,7 @@ export interface User {
     id: number
 }
 
-export interface Player extends User {
+export interface Player {
     id: number,
     name: string,
     image: string,

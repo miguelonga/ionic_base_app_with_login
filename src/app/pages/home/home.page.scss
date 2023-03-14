@@ -25,3 +25,11 @@ ion-item-divider {
 ion-content {
   --background: #19422d
 }
+
+ion-avatar.overlayed:nth-child(1) {
+  margin-left: 0px
+}
+
+ion-avatar.overlayed {
+  margin-left: -25px
+}
